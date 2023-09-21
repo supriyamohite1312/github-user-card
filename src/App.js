@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import axios from 'axios';
+import UserForm from './useForm';
+import UserCard from './userCard';
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  const getUserData = async (userName) => {
+    try {
+      const response = await axios.get(`https://api.github.com/users/${userName}`);
+      setUser(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Github User Card</h1>
+      <UserForm onSubmit={getUserData} />
+      {user && <UserCard user={user} />}
     </div>
   );
 }
